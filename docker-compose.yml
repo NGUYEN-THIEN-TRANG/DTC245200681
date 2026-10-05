@@ -103,13 +103,66 @@ services:
     networks:
       - pos_network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: pos_prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - pos_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pos_grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - pos_network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.52.1
+    container_name: pos_cadvisor
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    networks:
+      - pos_network
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter:v0.16.0
+    container_name: pos_mysql_exporter
+    restart: unless-stopped
+    command:
+      - "--config.my-cnf=/cfg/.my.cnf"
+    volumes:
+      - ./mysql-exporter/.my.cnf:/cfg/.my.cnf:ro
+    depends_on:
+      - mysql
+    ports:
+      - "9104:9104"
+    networks:
+      - pos_network
+      
 networks:
 
   pos_network:
 
     driver: bridge
 
-
 volumes:
 
   mysql_data:
+  grafana_data:

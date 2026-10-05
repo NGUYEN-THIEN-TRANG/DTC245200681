@@ -6,6 +6,8 @@ const session = require("express-session");
 
 const pool = require("./config/database");
 
+const client = require("prom-client");
+
 const productRoutes = require("./routes/products");
 
 const orderRoutes = require("./routes/orders");
@@ -136,6 +138,21 @@ app.get("/health", async (req, res) => {
 
 });
 
+// ==========================================
+// PROMETHEUS METRICS
+// ==========================================
+
+client.collectDefaultMetrics();
+
+app.get("/metrics", async (req, res) => {
+    try {
+        res.set("Content-Type", client.register.contentType);
+        res.end(await client.register.metrics());
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Không thể lấy metrics");
+    }
+});
 
 // ==========================================
 // SERVER
