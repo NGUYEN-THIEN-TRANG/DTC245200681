@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Quản lý sản phẩm</h1>
+
+    <!-- Thanh công cụ -->
+    <div class="toolbar">
+
+        <form method="GET" action="/products">
+
+            <input
+                type="text"
+                name="keyword"
+                placeholder="Tìm kiếm sản phẩm..."
+                value="<%= keyword %>"
+            >
+
+            <button type="submit">
+                Tìm kiếm
+            </button>
+
+        </form>
+
+        <a href="/products/add" class="btn-add">
+            + Thêm sản phẩm
+        </a>
+
+    </div>
+
+
+    <!-- Bảng sản phẩm -->
+
+    <table>
+
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Tên sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Giá</th>
+            <th>Tồn kho</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        <% products.forEach(product => { %>
+
+            <tr>
+
+                <td>
+                    <%= product.id %>
+                </td>
+
+                <td>
+                    <strong>
+                        <%= product.name %>
+                    </strong>
+                </td>
+
+                <td>
+                    <%= product.category_name || "Chưa phân loại" %>
+                </td>
+
+                <td>
+                    <%= Number(product.price).toLocaleString("vi-VN") %> đ
+                </td>
+
+                <td>
+                    <%= product.stock %>
+                </td>
+
+                <td>
+
+                    <% if (product.stock <= 0) { %>
+
+                        <span class="status danger">
+                            Hết hàng
+                        </span>
+
+                    <% } else if (product.stock <= 10) { %>
+
+                        <span class="status warning">
+                            Sắp hết
+                        </span>
+
+                    <% } else { %>
+
+                        <span class="status success">
+                            Còn hàng
+                        </span>
+
+                    <% } %>
+
+                </td>
+
+                <td>
+
+                    <a
+                        href="/products/edit/<%= product.id %>"
+                        class="btn-edit"
+                    >
+                        Sửa
+                    </a>
+
+
+                    <form
+                        method="POST"
+                        action="/products/delete/<%= product.id %>"
+                        style="display:inline"
+                        onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-delete"
+                        >
+                            Xóa
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+        <% }) %>
+
+        </tbody>
+
+    </table>
+
+
+    <% if (products.length === 0) { %>
+
+        <p class="empty">
+            Không tìm thấy sản phẩm.
+        </p>
+
+    <% } %>
+
+
+    <br>
+
+    <a href="/">
+        ← Quay lại Dashboard
+    </a>
+
+</div>
+
+</body>
+
+</html>

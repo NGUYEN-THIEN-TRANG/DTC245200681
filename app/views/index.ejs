@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>POS - Quản lý cửa hàng</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- ============================= -->
+    <!-- SIDEBAR -->
+    <!-- ============================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🛒 POS STORE
+        </div>
+
+        <nav>
+
+            <a href="/" class="active">
+                📊 Dashboard
+            </a>
+
+            <a href="#products">
+                📦 Sản phẩm
+            </a>
+
+            <a href="#orders">
+                🧾 Hóa đơn
+            </a>
+
+            <a href="#inventory">
+                📋 Tồn kho
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ============================= -->
+    <!-- MAIN -->
+    <!-- ============================= -->
+
+    <main class="main">
+
+
+        <header>
+
+            <h1>
+                Quản lý cửa hàng
+            </h1>
+
+            <p>
+                Hệ thống bán hàng POS
+            </p>
+
+        </header>
+
+
+        <!-- ========================= -->
+        <!-- STATISTICS -->
+        <!-- ========================= -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <span>
+                    📦
+                </span>
+
+                <div>
+
+                    <p>
+                        Tổng sản phẩm
+                    </p>
+
+                    <h2>
+                        <%= products.length %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <span>
+                    🧾
+                </span>
+
+                <div>
+
+                    <p>
+                        Hóa đơn gần đây
+                    </p>
+
+                    <h2>
+                        <%= orders.length %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <span>
+                    📊
+                </span>
+
+                <div>
+
+                    <p>
+                        Sản phẩm sắp hết
+                    </p>
+
+                    <h2>
+
+                        <%= products.filter(
+                            p => p.stock < 10
+                        ).length %>
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- PRODUCTS -->
+        <!-- ========================= -->
+
+        <section
+            class="section"
+            id="products"
+        >
+
+            <div class="section-header">
+
+                <h2>
+                    Danh sách sản phẩm
+                </h2>
+
+                <button>
+                    + Thêm sản phẩm
+                </button>
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Sản phẩm
+                        </th>
+
+                        <th>
+                            Giá
+                        </th>
+
+                        <th>
+                            Tồn kho
+                        </th>
+
+                        <th>
+                            Trạng thái
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <% products.forEach(product => { %>
+
+                    <tr>
+
+                        <td>
+                            <%= product.id %>
+                        </td>
+
+                        <td>
+                            <strong>
+                                <%= product.name %>
+                            </strong>
+                        </td>
+
+                        <td>
+                            <%= Number(
+                                product.price
+                            ).toLocaleString(
+                                "vi-VN"
+                            ) %> đ
+                        </td>
+
+                        <td>
+                            <%= product.stock %>
+                        </td>
+
+                        <td>
+
+                            <% if (
+                                product.stock < 10
+                            ) { %>
+
+                                <span class="danger">
+                                    Sắp hết
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="success">
+                                    Còn hàng
+                                </span>
+
+                            <% } %>
+
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- ORDERS -->
+        <!-- ========================= -->
+
+        <section
+            class="section"
+            id="orders"
+        >
+
+            <div class="section-header">
+
+                <h2>
+                    Hóa đơn gần đây
+                </h2>
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Mã hóa đơn
+                        </th>
+
+                        <th>
+                            Tổng tiền
+                        </th>
+
+                        <th>
+                            Ngày tạo
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <% orders.forEach(order => { %>
+
+                    <tr>
+
+                        <td>
+                            #HD<%= order.id %>
+                        </td>
+
+                        <td>
+
+                            <%= Number(
+                                order.total_amount
+                            ).toLocaleString(
+                                "vi-VN"
+                            ) %> đ
+
+                        </td>
+
+                        <td>
+                            <%= order.created_at %>
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

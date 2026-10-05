@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Hóa đơn #<%= order.id %>
+    </title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>HÓA ĐƠN BÁN HÀNG</h1>
+
+    <div class="invoice">
+
+        <p>
+            <strong>Mã hóa đơn:</strong>
+            #<%= order.id %>
+        </p>
+
+        <p>
+            <strong>Thời gian:</strong>
+            <%= new Date(order.created_at)
+                .toLocaleString("vi-VN") %>
+        </p>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Sản phẩm</th>
+
+                <th>Số lượng</th>
+
+                <th>Đơn giá</th>
+
+                <th>Thành tiền</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <% items.forEach(item => { %>
+
+                <tr>
+
+                    <td>
+                        <%= item.product_name %>
+                    </td>
+
+                    <td>
+                        <%= item.quantity %>
+                    </td>
+
+                    <td>
+                        <%= Number(item.price)
+                            .toLocaleString("vi-VN") %> đ
+                    </td>
+
+                    <td>
+                        <%= Number(item.subtotal)
+                            .toLocaleString("vi-VN") %> đ
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="invoice-total">
+
+            Tổng thanh toán:
+
+            <strong>
+                <%= Number(order.total_amount)
+                    .toLocaleString("vi-VN") %> đ
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+    <button
+        onclick="window.print()"
+    >
+        🖨 In hóa đơn
+    </button>
+
+    <a href="/orders/sale">
+        Tiếp tục bán hàng
+    </a>
+
+    <br><br>
+
+    <a href="/">
+        ← Dashboard
+    </a>
+
+</div>
+
+</body>
+
+</html>

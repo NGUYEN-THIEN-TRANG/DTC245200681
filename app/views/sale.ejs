@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Bán hàng POS</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🛒 Bán hàng</h1>
+
+    <div class="sale-layout">
+
+        <!-- ===================================== -->
+        <!-- DANH SÁCH SẢN PHẨM -->
+        <!-- ===================================== -->
+
+        <div>
+
+            <h2>Sản phẩm</h2>
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>Tên</th>
+
+                    <th>Danh mục</th>
+
+                    <th>Giá</th>
+
+                    <th>Tồn</th>
+
+                    <th>Thêm</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <% products.forEach(product => { %>
+
+                    <tr>
+
+                        <td>
+                            <%= product.name %>
+                        </td>
+
+                        <td>
+                            <%= product.category_name || "Khác" %>
+                        </td>
+
+                        <td>
+                            <%= Number(product.price)
+                                .toLocaleString("vi-VN") %> đ
+                        </td>
+
+                        <td>
+                            <%= product.stock %>
+                        </td>
+
+                        <td>
+
+                            <form
+                                method="POST"
+                                action="/orders/cart/add"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="product_id"
+                                    value="<%= product.id %>"
+                                >
+
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    value="1"
+                                    min="1"
+                                    max="<%= product.stock %>"
+                                    style="width:70px"
+                                >
+
+                                <button type="submit">
+                                    Thêm
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- GIỎ HÀNG -->
+        <!-- ===================================== -->
+
+        <div class="cart-box">
+
+            <h2>🛒 Giỏ hàng</h2>
+
+            <% if (cart.length === 0) { %>
+
+                <p>
+                    Chưa có sản phẩm trong giỏ.
+                </p>
+
+            <% } else { %>
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Sản phẩm</th>
+
+                        <th>SL</th>
+
+                        <th>Đơn giá</th>
+
+                        <th>Thành tiền</th>
+
+                        <th></th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <% cart.forEach(item => { %>
+
+                        <tr>
+
+                            <td>
+                                <%= item.name %>
+                            </td>
+
+                            <td>
+                                <%= item.quantity %>
+                            </td>
+
+                            <td>
+                                <%= item.price
+                                    .toLocaleString("vi-VN") %> đ
+                            </td>
+
+                            <td>
+                                <%= (item.price * item.quantity)
+                                    .toLocaleString("vi-VN") %> đ
+                            </td>
+
+                            <td>
+
+                                <form
+                                    method="POST"
+                                    action="/orders/cart/remove"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="product_id"
+                                        value="<%= item.product_id %>"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="btn-delete"
+                                    >
+                                        Xóa
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                    </tbody>
+
+                </table>
+
+
+                <div class="cart-total">
+
+                    Tổng tiền:
+
+                    <strong>
+                        <%= total.toLocaleString("vi-VN") %> đ
+                    </strong>
+
+                </div>
+
+
+                <div class="cart-actions">
+
+                    <form
+                        method="POST"
+                        action="/orders/cart/clear"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-delete"
+                        >
+                            Xóa giỏ hàng
+                        </button>
+
+                    </form>
+
+
+                    <form
+                        method="POST"
+                        action="/orders/checkout"
+                        onsubmit="return confirm('Xác nhận thanh toán?')"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-checkout"
+                        >
+                            Thanh toán
+                        </button>
+
+                    </form>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+    <a href="/">
+        ← Dashboard
+    </a>
+
+</div>
+
+</body>
+
+</html>

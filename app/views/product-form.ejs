@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        <%= title %>
+    </title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        <%= title %>
+    </h1>
+
+
+    <form
+        method="POST"
+        action="<%= product
+            ? '/products/edit/' + product.id
+            : '/products/add'
+        %>"
+        class="product-form"
+    >
+
+
+        <!-- Tên -->
+
+        <label>
+            Tên sản phẩm
+        </label>
+
+        <input
+            type="text"
+            name="name"
+            required
+            value="<%= product ? product.name : '' %>"
+        >
+
+
+        <!-- Danh mục -->
+
+        <label>
+            Danh mục
+        </label>
+
+        <select
+            name="category_id"
+        >
+
+            <option value="">
+                -- Chọn danh mục --
+            </option>
+
+            <% categories.forEach(category => { %>
+
+                <option
+                    value="<%= category.id %>"
+
+                    <%= product &&
+                        product.category_id == category.id
+                        ? 'selected'
+                        : ''
+                    %>
+                >
+
+                    <%= category.name %>
+
+                </option>
+
+            <% }) %>
+
+        </select>
+
+
+        <!-- Giá -->
+
+        <label>
+            Giá bán
+        </label>
+
+        <input
+            type="number"
+            name="price"
+            min="0"
+            step="100"
+            required
+            value="<%= product ? product.price : '' %>"
+        >
+
+
+        <!-- Tồn kho -->
+
+        <label>
+            Số lượng tồn kho
+        </label>
+
+        <input
+            type="number"
+            name="stock"
+            min="0"
+            required
+            value="<%= product ? product.stock : 0 %>"
+        >
+
+
+        <br>
+
+
+        <button
+            type="submit"
+            class="btn-add"
+        >
+
+            <%= product
+                ? 'Cập nhật sản phẩm'
+                : 'Thêm sản phẩm'
+            %>
+
+        </button>
+
+
+        <a
+            href="/products"
+            class="btn-cancel"
+        >
+            Hủy
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>
